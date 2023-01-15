@@ -13,22 +13,17 @@ public class DataEstimadaService
         List<DateTime> DatasDisponiveis = new List<DateTime>();
 
         var data = sprint.DataInicio;
-        while(data != sprint.DataFim)
+        while(data <= sprint.DataFim)
         {
-            if (sprint.DaysOff.Contains(data))
+            if (sprint.DaysOff.Contains(data) ||
+                FinalSemana.Contains(data.DayOfWeek))
             {
                 data = data.AddDays(1);
                 continue;
             }
 
-            if (FinalSemana.Contains(data.DayOfWeek))
-            {
-                data = data.AddDays(1);
-                continue;
-            }
-
-            data = data.AddDays(1);
             DatasDisponiveis.Add(data);
+            data = data.AddDays(1);
         }
 
         Console.WriteLine("Datas disponíveis: ");
@@ -37,8 +32,28 @@ public class DataEstimadaService
         return DatasDisponiveis;
     }
 
-    public void CalcularDataEstimada(List<Demanda> demanda)
+    public void CalcularDataEstimada(ref Sprint sprint)
     {
+        int horasDisponiveis = 0;
 
+        foreach (var data in sprint.DiasDisponiveis)
+        {
+            horasDisponiveis += sprint.CapacidadePorDia;
+
+
+            for (int i = 0; i < sprint.Demanda.Count(); i++)
+            {
+                if (sprint.Demanda[i].DataEstimada != null)
+                    continue;
+
+                if (horasDisponiveis < sprint.Demanda[i].HoraEstimada)
+                    break;
+
+                horasDisponiveis -= sprint.Demanda[i].HoraEstimada;
+
+                if (horasDisponiveis > 0)
+                    sprint.Demanda[i].DataEstimada = data;
+            }
+        }
     }
 }
