@@ -51,7 +51,7 @@ public class DataEstimadaService
 
                 horasDisponiveis -= sprint.Demanda[i].HoraEstimada;
 
-                if (horasDisponiveis > 0)
+                if (horasDisponiveis >= 0)
                     sprint.Demanda[i].DataEstimada = data;
             }
         }

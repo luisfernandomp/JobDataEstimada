@@ -20,7 +20,7 @@ Console.Write("\n");
 
 foreach (var item in sprint.Demanda.OrderBy(x => x.DataEstimada).ToList())
 {
-    Console.WriteLine($"{item.Descricao} - {item.DataEstimada.ToString()}");
+    Console.WriteLine($"{item.HoraEstimada} - {item.DataEstimada.ToString()}");
 }
 
 
